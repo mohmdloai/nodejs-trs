@@ -9,6 +9,9 @@ Scenarios of  CryptoJS use case;
   (key changes daily )
 -
 */
+
+/* point to consider : JavaScript strings are always UTF-16 encoded text */
+
 import CryptoJs from "crypto-js";
 const encryptText = (passedText, key) => {
   const cipherText = CryptoJs.AES(passedText, key).toString();
