@@ -42,3 +42,7 @@ console.log("Encrypted Token: ", token);
 
 const decrypted = decryptText(token, todayDate);
 console.log("Decrypted Token: ", decrypted);
+
+
+// export funcs:
+export { encryptText, decryptText};
