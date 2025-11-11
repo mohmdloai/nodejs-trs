@@ -1,0 +1,41 @@
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var longestConsecutive = function(nums) {
+  let longest = 0;
+    let setOf = new Set(nums)
+    for (const item of setOf){
+       if (!setOf.has(item - 1)){ // this item is a starter for a sequence
+         let current = item;
+         let length = 1;
+         while(setOf.has(current+1)){
+           length ++
+           current ++
+         }
+         longest = Math.max(longest , length)
+       }
+    }
+      return longest;
+    
+    
+};
+
+
+console.log(longestConsecutive( [100,4,200,1,3,2]));
+
+/* 
+Example 1:
+
+Input: nums = [100,4,200,1,3,2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+Example 2:
+
+Input: nums = [0,3,7,2,5,8,4,6,0,1]
+Output: 9
+Example 3:
+
+Input: nums = [1,0,1,2]
+Output: 3
+*/
