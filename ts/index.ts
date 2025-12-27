@@ -85,4 +85,35 @@ type Both<T> = {
   [K in keyof T]?: T[K] | undefined
 }
 // Result: { name?: string | undefined }
+/*Form of identity fn to the [K in keyof T]: T[K] */
+// Most literal translation of [K in keyof T]: T[K]
+function identity(obj) {
+  const result = {};
+  
+  // [K in keyof T]
+  for (const K in obj) {
+    // : T[K]
+    result[K] = obj[K];
+  }
+  
+  return result;
+}
+//OR
+function identity(obj) {
+  return Object.keys(obj).reduce((result, K) => {
+    // [K]: T[K]
+    result[K] = obj[K];
+    return result;
+  }, {});
+}
+//or
+function identity(obj) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([K, value]) => [K, value])
+  );
+}
+function identity(obj) {
+  return { ...obj };
+}
+
 console.log(user.id);
