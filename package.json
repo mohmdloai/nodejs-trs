@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --env-file=.env newserv.js",
+    "dev:ts": "tsx ts/index.ts",
     "build": "tsc",
     "dev": "tsc --watch"
   },
@@ -18,6 +19,7 @@
   "devDependencies": {
     "@types/node": "^25.0.3",
     "nodemon": "^3.1.10",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
