@@ -87,7 +87,7 @@ type Both<T> = {
 // Result: { name?: string | undefined }
 /*Form of identity fn to the [K in keyof T]: T[K] */
 // Most literal translation of [K in keyof T]: T[K]
-function identity(obj) {
+/*function identity(obj) {
   const result = {};
   
   // [K in keyof T]
@@ -153,4 +153,24 @@ function validateAndSave(draft: UserForm) {
 }
 validateAndSave(oneUser);
 saveUser(oneUser);
-console.log(user.id);
+
+//Readonly<Type> — The "Immutability Contract":
+function loadConfig(): AppConfig {
+  return {
+    apiUrl: "https://api.example.com",
+    timeout: 5000,
+    retries: 3
+  };
+}
+// // FOUNDATION: Shared configuration object
+interface AppConfig {
+  apiUrl: string;
+  timeout: number;
+  retries: number;
+}
+const config: Readonly<AppConfig> = loadConfig();
+// ❌config.apiUrl = "https://evil.com"; // Cannot assign to 'apiUrl' because it is read-only
+// CORRECT: Create new object for modifications
+const devConfig: AppConfig = { ...config, apiUrl: "http://localhost" };
+
+// console.log(user.id);
