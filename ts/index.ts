@@ -115,5 +115,42 @@ function identity(obj) {
 function identity(obj) {
   return { ...obj };
 }
-
+*/
+interface UserForm {
+  email?: string;
+  password?: string;
+  username?: string;
+}
+let oneUser : Required<UserForm> = {
+  password: 'password',
+  email: 'user@example.com',
+  username: 'user'
+};
+// PROBLEM: Before saving to DB, all fields MUST be present:
+  // db.save(data);// safe insertion;
+function saveUser(data: Required<UserForm>){
+   console.log('Saving user:', data);
+}
+// make your validation pipeline ::
+function validateAndSave(draft: UserForm) {
+  if (!draft.email || !draft.password || !draft.username) {
+    throw new Error("Missing required fields");
+    
+  }
+  saveUser(draft as Required<UserForm>);// assert after checking
+  // or use this guards:
+  /*
+  // Version 1: With !!
+  function isComplete1(form: UserForm): form is Required<UserForm> {
+    return !!form.email && !!form.password && !!form.name;
+  }
+  
+  // Version 2: Without !! (same result)
+  function isComplete2(form: UserForm): form is Required<UserForm> {
+    return form.email && form.password && form.name;
+  } */
+  
+}
+validateAndSave(oneUser);
+saveUser(oneUser);
 console.log(user.id);
