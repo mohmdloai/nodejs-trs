@@ -174,3 +174,61 @@ const config: Readonly<AppConfig> = loadConfig();
 const devConfig: AppConfig = { ...config, apiUrl: "http://localhost" };
 
 // console.log(user.id);
+// Pick<Type, Keys> — The "Projection Operator":
+/*Conceptual mapping:
+Database Analogy: SELECT id, name FROM users (project specific columns)
+Transformation: Extract subset of properties
+Pattern: Vertical slicing of data structure */
+// FOUNDATION: Full user entity
+interface UserC {
+  id: string;
+  email: string;
+  passwordHash: string;  // Sensitive to expose! 
+  name: string;
+  age: number;
+  lastLogin: Date;
+  createdAt: Date;
+}
+//PROBLEM: API should never expose password hash
+type UserPublicProfile = Pick<UserC, 'id' | 'name' | 'age'>;
+function getUserProfile(id: string): UserPublicProfile {
+  const user = database.findUser(id);
+  
+  // ✓ Only safe fields exposed
+  return {
+    id: user.id,
+    name: user.name,
+    age: user.age,
+    // passwordHash: user.passwordHash  ❌ Compile error!
+  };
+}
+// Add this helper function before your getUser function
+function pick<T extends object, K extends keyof T>(
+  obj: T, 
+  ...keys: K[]
+): Pick<T, K> {
+  const result = {} as Pick<T, K>;
+  for (const key of keys) {
+    result[key] = obj[key];
+  }
+  return result;//or Skip pick entirely, & use destructuring
+}
+// TIER 1: Public (anyone)
+type PublicUser = Pick<UserC, 'id' | 'name'>;
+
+// TIER 2: Authenticated (logged-in users)
+type AuthenticatedUser = Pick<UserC, 'id' | 'name' | 'email' | 'lastLogin'>;
+
+// TIER 3: Admin (full access)
+type AdminUser = UserC;
+
+// Access control enforced through types
+function getUser(id: string, role: 'public' | 'auth' | 'admin') {
+  const user = database.findUser(id);
+  
+  switch(role) {
+    case 'public': return pick(user, 'id', 'name') as PublicUser; 
+    case 'auth': return pick(user, 'id', 'name', 'email', 'lastLogin') as AuthenticatedUser;
+    case 'admin': return user;
+  }
+}
